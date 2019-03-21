@@ -14,7 +14,7 @@ vec3 random_in_unit_sphere() {
 
 vec3 color(const ray& r, hitable *world) {
     hit_record rec;
-    if (world->hit(r, 0.0, MAXFLOAT, rec)) {
+    if (world->hit(r, 0.001, MAXFLOAT, rec)) {
         vec3 target = rec.p + rec.normal + random_in_unit_sphere();
         return 0.5*color( ray(rec.p, target - rec.p), world);
     }
@@ -49,6 +49,7 @@ int main(){
             }
 
             col /= float(ns);
+            col = vec3( sqrt(col[0]), sqrt(col[1]), sqrt(col[2]) );
             int ir = int(255.99*col[0]);
             int ig = int(255.99*col[1]);
             int ib = int(255.99*col[2]);
