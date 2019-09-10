@@ -148,7 +148,7 @@ int main(){
     list[4] = new sphere(vec3(-1,0,-1), -0.45, new dielectric(1.5));
 
     hitable *world = new hitable_list(list, NUM_ELEMENTS);
-    camera cam(vec3(-2, 2, 1), vec3(0, 0, -1), vec3(0, 1, 0), 90, float(nx)/float(ny));
+    camera cam(vec3(-2, 2, 1), vec3(0, 0, -1), vec3(0, 1, 0), 10, float(nx)/float(ny));
 
     for (int j = ny-1; j >=0; j--) {
         for (int i = 0; i < nx; i++) {
