@@ -136,18 +136,19 @@ int main(){
     int ny = 200;
     int ns = 100;
 
-    const int NUM_ELEMENTS = 2;
+    const int NUM_ELEMENTS = 5;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     hitable *list[NUM_ELEMENTS];
-
-    float R = cos(M_PI/4);
-    list[0] = new sphere(vec3(-R,0,-1), R, new lambertian(vec3(0, 0, 1)));
-    list[1] = new sphere(vec3(R,0,-1), R, new lambertian(vec3(1, 0, 0)));
+    list[0] = new sphere(vec3(0,0,-1), 0.5, new lambertian(vec3(0.1, 0.2, 0.5)));
+    list[1] = new sphere(vec3(0,-100.5,-1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
+    list[2] = new sphere(vec3(1,0,-1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.3));
+    list[3] = new sphere(vec3(-1,0,-1), 0.5, new dielectric(1.5));
+    list[4] = new sphere(vec3(-1,0,-1), -0.45, new dielectric(1.5));
 
     hitable *world = new hitable_list(list, NUM_ELEMENTS);
-    camera cam(90, float(nx)/float(ny));
+    camera cam(vec3(-2, 2, 1), vec3(0, 0, -1), vec3(0, 1, 0), 90, float(nx)/float(ny));
 
     for (int j = ny-1; j >=0; j--) {
         for (int i = 0; i < nx; i++) {
