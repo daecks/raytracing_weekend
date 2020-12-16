@@ -119,7 +119,7 @@ class dielectric : public material {
                 scattered = ray(rec.p, reflected);
                 reflect_prob = 1.0;
             }
-            
+
             if(drand48() < reflect_prob) {
                 scattered = ray(rec.p, reflected);
             }else{
@@ -134,7 +134,10 @@ class dielectric : public material {
 hitable *random_scene(){
     int n = 500;
     hitable **list = new hitable*[n+1];
-    list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(vec3(0.5, 0.5, 0.5)));
+
+    // Create the sphere upon which everything sits.
+    list[0] = new sphere(vec3(0, -10000, 0), 10000, new lambertian(vec3(0.5, 0.5, 0.5)));
+
     int i = 1;
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
@@ -145,11 +148,11 @@ hitable *random_scene(){
                     list[i++] = new sphere(center, 
                             0.2, 
                             new lambertian(vec3( drand48() * drand48(), drand48() * drand48(), drand48() * drand48())));
-                } else if (material_choice < 0.95) {
+                } else if (material_choice < 0.95) { // metal
                     list[i++] = new sphere(center, 
                             0.2, 
                             new metal(vec3( 0.5*(1 + drand48()), 0.5*(1 + drand48()), 0.5*(1 + drand48())), 0.5 * drand48()));
-                } else {
+                } else { //
                     list[i++] = new sphere(center, 0.2, new dielectric(1.5));
                 }
             }
@@ -166,20 +169,23 @@ hitable *random_scene(){
 
 
 int main(){
-    int nx = 3840;
-    int ny = 2160;
-    int ns = 10;
+    static const int nx = 640;
+    static const int ny = 480;
+    static const int ns = 2; //TODO: some magic number I need to remind myself about. Higher is better quality.
 
-    std::cout << "P3\n" << nx << " " << ny << "\n255\n";
+    static const int vfov = 20; // degrees
+    static const float aspect_ratio = float(nx)/float(ny);
+    static const float aperture = 0.05;
 
     hitable *world = random_scene();
 
-    vec3 lookfrom(13,2,3);
-    vec3 lookat(0,0,0);
-    vec3 vup(0,1,0);
-    float dist_to_focus = (lookfrom - lookat).length();
-    float aperture = 0.01;
-    camera cam(lookfrom, lookat, vup, 20, float(nx)/float(ny), aperture, dist_to_focus);
+    const vec3 lookfrom(13,2,3);
+    const vec3 lookat(0,0,0);
+    const vec3 vup(0,1,0);
+    const float dist_to_focus = (lookfrom - lookat).length();
+    camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus);
+    
+    std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
     for (int j = ny-1; j >=0; j--) {
         for (int i = 0; i < nx; i++) {
