@@ -132,13 +132,14 @@ class dielectric : public material {
 };
 
 hitable *random_scene(){
-    static const int num_spheres = 500;
-    hitable **list = new hitable*[num_spheres+1]; // +1 for the big sphere (ground), +3 for the example spheres
-    static const int something = 11;
+    static const int num_spheres = 500; // TODO: More than we need (only use 485)
+    hitable **list = new hitable*[num_spheres+1]; // +1 for the big sphere (ground), +3 for the example spheres further down
+    static const int something = 11; // is a range of coords on which to generate spheres
     static const float small_sphere_radius = 0.2;
+    static const int floor_sphere_radius = 10000;
 
     // Create the sphere upon which everything sits.
-    list[0] = new sphere(vec3(0, -10000, 0), 10000, new lambertian(vec3(0.5, 0.5, 0.5)));
+    list[0] = new sphere(vec3(0, -floor_sphere_radius, 0), floor_sphere_radius, new lambertian(vec3(0.5, 0.5, 0.5)));
 
     int i = 1;
     for (int a = -something; a < something; a++) {
@@ -173,7 +174,7 @@ hitable *random_scene(){
 int main(){
     static const int nx = 640;
     static const int ny = 480;
-    static const int ns = 1; //TODO: some magic number I need to remind myself about. Higher is better quality.
+    static const int ns = 15; //TODO: some magic number I need to remind myself about. Higher is better quality.
 
     static const int vfov = 20; // degrees
     static const float aspect_ratio = float(nx)/float(ny);
